@@ -7,7 +7,7 @@ INSERT INTO entrenadores (nombre, especialidad) VALUES
 ('Marta', 'Musculación'), 
 ('Iván', 'Funcional');
 
--- Datos basados en tu Excel
+-- Datos basados en Excel
 INSERT INTO socios (id, nombre_socio, telefono, plan_id, sede_id) VALUES 
 (101, 'Ana Pérez', '555-1234', 1, 1),
 (102, 'Luis Gómez', '555-5678', 2, 2);
