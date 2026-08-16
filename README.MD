@@ -6,25 +6,20 @@ Proyecto de normalización de datos (hasta la 3ª Forma Normal - 3NF), diseño d
 
 ## Autor
 * **Nombre:** Sergio Ricardo Ajú Miranda
-* **Programa:** Campuslands (Cohorte U1-Enero 2026)
 * **Módulo:** Programación / Bases de Datos Avanzadas
-
 ---
 
 ##  Estructura del Proyecto
 ```text
-.
-├── README.md
-├── analisis/
-│   └── normalizacion.md
+sql/
 ├── ddl/
 │   └── schema.sql
 ├── dml/
-│   └── inserts.sql
-├── procedures/
-│   ├── sp_registrar_socio.sql
-│   └── funciones.sql
-├── security/
-│   └── usuarios_privilegios.sql
-└── dql/
-    └── consultas_avanzadas.sql
+│   └── insert.sql
+├── dql/
+│   └── consultas-avanzadas.sql
+├── usuarios-permisos/
+│   └── usuarios-roles.sql
+└── programacion/
+    ├── triggers.sql
+    └── eventos.sql
