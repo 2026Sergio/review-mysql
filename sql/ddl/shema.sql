@@ -1,39 +1,69 @@
-CREATE DATABASE IF NOT EXISTS gimnasio_db;
-USE gimnasio_db;
+DROP DATABASE IF EXISTS registro_gimnasio;
+CREATE DATABASE registro_gimnasio;
+USE registro_gimnasio;
 
+-- 1. TABLA CIUDADES
+CREATE TABLE ciudades (
+    ciudad_id VARCHAR(10) PRIMARY KEY,
+    nombre_ciudad VARCHAR(120) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- 2. TABLA SEDES
 CREATE TABLE sedes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_sede VARCHAR(50) NOT NULL,
-    ciudad VARCHAR(50) NOT NULL
-);
+    sede_id VARCHAR(10) PRIMARY KEY,
+    nombre_sede VARCHAR(120) NOT NULL,
+    ciudad_id VARCHAR(10) NOT NULL,
+    CONSTRAINT fk_sede_ciudad 
+        FOREIGN KEY (ciudad_id) REFERENCES ciudades(ciudad_id)
+) ENGINE=InnoDB;
 
-CREATE TABLE planes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_plan VARCHAR(50) NOT NULL,
-    precio DECIMAL(10,2) DEFAULT 0.00
-);
-
-CREATE TABLE entrenadores (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    especialidad VARCHAR(50) NOT NULL,
-    activo TINYINT(1) DEFAULT 1
-);
-
+-- 3. TABLA SOCIOS
 CREATE TABLE socios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_socio VARCHAR(60) NOT NULL,
-    telefono VARCHAR(20),
-    plan_id INT,
-    sede_id INT,
-    CONSTRAINT fk_socio_plan FOREIGN KEY (plan_id) REFERENCES planes(id),
-    CONSTRAINT fk_socio_sede FOREIGN KEY (sede_id) REFERENCES sedes(id)
-);
+    socio_id INT PRIMARY KEY,
+    nombres VARCHAR(120) NOT NULL,
+    apellidos VARCHAR(120) NOT NULL,
+    telefono VARCHAR(20) NOT NULL UNIQUE
+) ENGINE=InnoDB;
 
-CREATE TABLE socio_entrenador (
-    socio_id INT,
-    entrenador_id INT,
-    PRIMARY KEY (socio_id, entrenador_id),
-    CONSTRAINT fk_se_socio FOREIGN KEY (socio_id) REFERENCES socios(id),
-    CONSTRAINT fk_se_entrenador FOREIGN KEY (entrenador_id) REFERENCES entrenadores(id)
-);
+-- 4. TABLA PLANES_ENTRENAMIENTO
+CREATE TABLE planes_entrenamiento (
+    plan_entrenamiento_id VARCHAR(10) PRIMARY KEY,
+    plan_entrenamiento VARCHAR(150) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- 5. TABLA ESPECIALIDADES_ENTRENADORES
+CREATE TABLE especialidades_entrenadores (
+    especialidad_id VARCHAR(10) PRIMARY KEY,
+    nombre_especialidad VARCHAR(120) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- 6. TABLA ENTRENADORES
+CREATE TABLE entrenadores (
+    entrenador_id VARCHAR(10) PRIMARY KEY,
+    nombre_entrenador VARCHAR(120) NOT NULL,
+    especialidad_id VARCHAR(10) NOT NULL,
+    CONSTRAINT fk_entrenador_especialidad 
+        FOREIGN KEY (especialidad_id) REFERENCES especialidades_entrenadores(especialidad_id)
+) ENGINE=InnoDB;
+
+-- 7. TABLA SOCIO_PLAN_ENTRENAMIENTO (Transaccional)
+CREATE TABLE socio_plan_entrenamiento (
+    socio_plan_entrenamiento_id INT AUTO_INCREMENT PRIMARY KEY,
+    socio_id INT NOT NULL,
+    plan_entrenamiento_id VARCHAR(10) NOT NULL,
+    entrenador_id VARCHAR(10) NOT NULL,
+    sede_id VARCHAR(10) NOT NULL,
+    CONSTRAINT fk_spe_socio 
+        FOREIGN KEY (socio_id) REFERENCES socios(socio_id),
+    CONSTRAINT fk_spe_plan 
+        FOREIGN KEY (plan_entrenamiento_id) REFERENCES planes_entrenamiento(plan_entrenamiento_id),
+    CONSTRAINT fk_spe_entrenador 
+        FOREIGN KEY (entrenador_id) REFERENCES entrenadores(entrenador_id),
+    CONSTRAINT fk_spe_sede 
+        FOREIGN KEY (sede_id) REFERENCES sedes(sede_id)
+) ENGINE=InnoDB;
+
+-- INDICES DE OPTIMIZACIÓN
+CREATE INDEX indx_nombres_socios ON socios(nombres, apellidos);
+CREATE INDEX indx_nombre_entrenador ON entrenadores(nombre_entrenador);
+CREATE INDEX indx_planes_entrenamiento ON planes_entrenamiento(plan_entrenamiento);
